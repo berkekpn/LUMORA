@@ -98,7 +98,7 @@ Geri bildirimler, issue’lar ve katkılar memnuniyetle karşılanır! 🚀
 
 ## 🔗 Live Demo & Kaynak Kod
 
-**Live:** *(GitHub Pages linkini buraya ekleyin)*  
+**Live:** *(https://berkekpn.github.io/LUMORA/)*  
 **Repo:** [*(GitHub repo linki)*](https://github.com/berkekpn/LUMORA)
 
 ---
