@@ -1,0 +1,134 @@
+<!-- Dinamik film arkaplanı
+  🔹 Movie Explorer — Core Script
+  🔹 Author: Berke Kapan
+  🔹 GitHub: https://github.com/berkekpn
+  ---
+  Notes: Reactive UI, TMDB API integration, localStorage state engine,
+         clean functions & modular architecture.
+-->
+
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Favorilerim | LUMORA</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="backdrop" class="backdrop"></div>
+
+  <div class="app-container">
+    <header class="top-nav">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <span class="brand-text">LUMORA</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">Keşfet</a>
+        <a href="favorites.html" class="nav-link nav-link--active">Favoriler</a>
+      </nav>
+    </header>
+
+    <section class="hero-card">
+      <div class="hero-glow"></div>
+      <div class="hero-content" style="text-align:left; max-width:520px;">
+        <h1 class="hero-title">Favorilerim</h1>
+        <p class="hero-subtitle">
+          Burada yerel olarak kaydettiğin favori filmler listelenir.
+        </p>
+        <a href="index.html" class="movie-link">
+          ← Ana sayfaya dön
+        </a>
+      </div>
+    </section>
+
+    <section id="status" class="status info">
+      Favori filmlerin yükleniyor...
+    </section>
+
+    <div id="loader" class="loader hidden"></div>
+
+    <p id="fav-progress-text" class="fav-progress-text"></p>
+<div class="fav-progress-bar">
+  <div id="fav-progress-fill" class="fav-progress-fill"></div>
+</div>
+
+
+    <section class="content-section">
+  <div class="favorites-header-row">
+    <h2 id="section-title" class="section-title">
+      Kaydettiğin filmler
+    </h2>
+    <div class="favorites-sort">
+      <label for="fav-sort" class="favorites-sort-label">Sırala:</label>
+      <select id="fav-sort" class="favorites-sort-select">
+        <option value="added">Eklenme sırası</option>
+        <option value="rating">Puan (yüksek → düşük)</option>
+        <option value="year">Yıl (yeni → eski)</option>
+        <option value="title">Ada göre (A→Z)</option>
+      </select>
+    </div>
+  </div>
+
+  <section id="movies-grid" class="movies-grid"></section>
+</section>
+
+  <!-- Film Detay Paneli -->
+  <div id="detail-panel" class="detail-panel hidden">
+    <div class="detail-panel-overlay" id="detail-overlay"></div>
+    <aside class="detail-panel-content">
+      <button id="detail-close" class="detail-close" aria-label="Kapat">✕</button>
+
+      <div class="detail-header">
+        <img id="detail-poster" class="detail-poster" alt="" />
+        <div class="detail-header-text">
+          <h2 id="detail-title" class="detail-title"></h2>
+          <p id="detail-meta" class="detail-meta"></p>
+          <p id="detail-genres" class="detail-genres"></p>
+          <div class="detail-tags">
+            <span id="detail-rating" class="detail-tag"></span>
+            <span id="detail-runtime" class="detail-tag"></span>
+            <span id="detail-lang" class="detail-tag"></span>
+          </div>
+          <div class="detail-actions-main">
+            <a
+              id="detail-tmdb-link"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="detail-primary-btn"
+            >
+              TMDB'de aç
+            </a>
+            <button id="detail-watchlist" type="button" class="detail-chip-btn">
+              ⏱ Sonra izle
+            </button>
+            <button id="detail-watched" type="button" class="detail-chip-btn">
+              ✔ İzledim
+            </button>
+            <button id="detail-favorite" type="button" class="detail-chip-btn">
+              ♡ Favori
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-body">
+        <p id="detail-overview" class="detail-overview"></p>
+        <p id="detail-cast" class="detail-cast"></p>
+
+        <div id="detail-recommendations" class="detail-recommendations hidden">
+          <h3 class="detail-subtitle">Benzer filmler</h3>
+          <div id="detail-rec-list" class="detail-rec-list"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+
+  <script src="favorites.js"></script>
+</body>
+</html>

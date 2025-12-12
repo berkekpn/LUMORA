@@ -1,0 +1,190 @@
+<!-- Dinamik film arkaplanı
+  🔹 Movie Explorer — Core Script
+  🔹 Author: Berke Kapan
+  🔹 GitHub: https://github.com/berkekpn
+  ---
+  Notes: Reactive UI, TMDB API integration, localStorage state engine,
+         clean functions & modular architecture.
+-->
+
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LUMORA | Berke</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Dinamik film arkaplanı -->
+  <div id="backdrop" class="backdrop"></div>
+
+  <!-- Spider efekt canvas -->
+  <canvas id="spider-canvas" class="spider-canvas"></canvas>
+
+  <div class="app-container">
+
+    <!-- ÜST NAV -->
+    <header class="top-nav">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <span class="brand-text">LUMORA</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link nav-link--active">Keşfet</a>
+        <a href="favorites.html" class="nav-link">Favoriler</a>
+
+        <button id="theme-toggle" type="button" class="theme-toggle">
+          <span class="theme-toggle-icon">🌙</span>
+        </button>
+
+        <a href="https://www.themoviedb.org" target="_blank" class="nav-link nav-link--muted">
+          TMDB
+        </a>
+      </nav>
+    </header>
+
+
+    <!-- HERO + Search -->
+    <section class="hero-card">
+      <div class="hero-glow"></div>
+
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          🎬 Film keşif aracı
+        </div>
+
+        <h1 class="hero-title">LUMORA</h1>
+        <p class="hero-subtitle">Filmleri keşfet, favorilerine ekle, detaylarını incele.</p>
+
+        <!-- *** TEK ARAMA FORMU *** -->
+        <form id="search-form" class="search-bar">
+          <input
+            id="search-input"
+            type="text"
+            autocomplete="off"
+            placeholder="Örn: Matrix, Interstellar, Joker..."
+          />
+
+          <select id="sort-select">
+            <option value="popularity.desc">En Popüler</option>
+            <option value="vote_average.desc">En Yüksek Puan</option>
+            <option value="release_date.desc">En Yeni</option>
+          </select>
+
+          <button type="submit">Ara</button>
+        </form>
+
+        <!-- FİLTRELER -->
+        <div class="search-filters">
+          <div class="filter-group">
+            <label for="genre-select">Tür</label>
+            <select id="genre-select">
+              <option value="">Hepsi</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Yıl (Min)</label>
+            <input id="year-from" type="number" placeholder="1970" />
+          </div>
+
+          <div class="filter-group">
+            <label>Yıl (Max)</label>
+            <input id="year-to" type="number" placeholder="2024" />
+          </div>
+
+          <div class="filter-group">
+            <label>Puan (Min)</label>
+            <input id="rating-min" type="number" step="0.5" min="0" max="10" />
+          </div>
+        </div>
+
+        <div id="search-suggestions" class="search-suggestions hidden"></div>
+
+        <div id="search-history" class="search-history hidden">
+          <span class="search-history-label">Son aramalar:</span>
+          <div id="search-history-list"></div>
+          <button id="clear-history" class="search-history-clear">Temizle</button>
+        </div>
+
+      </div>
+    </section>
+
+
+    <section id="status" class="status info">
+      Film aramak için yukarıya bir şey yaz.
+    </section>
+
+    <div id="loader" class="loader hidden"></div>
+
+    <section class="content-section">
+      <h2 id="section-title" class="section-title">Bugün trend olan filmler</h2>
+      <div id="movies-grid" class="movies-grid"></div>
+    </section>
+
+    <div id="pagination" class="pagination hidden">
+      <button id="prev-page" class="page-btn">Önceki</button>
+      <span id="page-info" class="page-info">Sayfa 1</span>
+      <button id="next-page" class="page-btn">Sonraki</button>
+    </div>
+
+    <footer class="footer">
+      Made with ❤️ by berke.codes • Veriler
+      <a href="https://www.themoviedb.org" target="_blank">TMDB</a>
+      üzerinden çekiliyor •
+      <a href="favorites.html">Favorilerim</a>
+    </footer>
+  </div>
+
+
+  <!-- DETAY PANELİ -->
+  <div id="detail-panel" class="detail-panel hidden">
+    <div id="detail-overlay" class="detail-panel-overlay"></div>
+
+    <aside class="detail-panel-content">
+      <button id="detail-close" class="detail-close">✕</button>
+
+      <div class="detail-header">
+        <img id="detail-poster" class="detail-poster" />
+
+        <div class="detail-header-text">
+          <h2 id="detail-title" class="detail-title"></h2>
+          <p id="detail-meta" class="detail-meta"></p>
+          <p id="detail-genres" class="detail-genres"></p>
+
+          <div class="detail-tags">
+            <span id="detail-rating" class="detail-tag"></span>
+            <span id="detail-runtime" class="detail-tag"></span>
+            <span id="detail-lang" class="detail-tag"></span>
+          </div>
+
+          <div class="detail-actions-main">
+            <a id="detail-tmdb-link" class="detail-primary-btn" target="_blank">TMDB'de aç</a>
+            <button id="detail-watchlist" class="detail-chip-btn">⏱</button>
+            <button id="detail-watched" class="detail-chip-btn">✔</button>
+            <button id="detail-favorite" class="detail-chip-btn">♡</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-body">
+        <p id="detail-overview" class="detail-overview"></p>
+        <p id="detail-cast" class="detail-cast"></p>
+
+        <div id="detail-recommendations" class="detail-recommendations hidden">
+          <h3 class="detail-subtitle">Benzer filmler</h3>
+          <div id="detail-rec-list" class="detail-rec-list"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+
+  <script src="script.js"></script>
+</body>
+</html>
